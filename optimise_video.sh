@@ -15,12 +15,43 @@ PRESET="medium"
 AUDIO_BITRATE="128k"
 
 ############################################
+# HELP FUNCTION
+############################################
+
+show_help()
+{
+    echo "Video Optimiser (FFmpeg Wrapper)"
+    echo
+    echo "Usage:"
+    echo "  optimise_video.sh <input_video> [output_video]"
+    echo
+    echo "Description:"
+    echo "  Compress a video using FFmpeg while keeping good quality."
+    echo
+    echo "Examples:"
+    echo "  optimise_video.sh input.mp4"
+    echo "  optimise_video.sh input.mp4 output.mp4"
+    echo
+    echo "Notes:"
+    echo "  - Output defaults to: <name>_optimised.<ext>"
+    echo "  - Saved in same directory as input file"
+}
+
+############################################
 # ARGUMENT CHECK
 ############################################
 
+# Show help if requested
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]
+then
+    show_help
+    exit 0
+fi
+
 if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]
 then
-    echo "Usage: $0 <input_video> [output_video]"
+    echo "Error: invalid arguments"
+    echo "Use --help for usage."
     exit 1
 fi
 
@@ -40,7 +71,6 @@ if [ "$#" -eq 2 ]
 then
     OUTPUT_FILE="$2"
 else
-    # Save the optimised file in the same folder as the input file.
     input_directory=$(dirname -- "$INPUT_FILE")
     filename=$(basename -- "$INPUT_FILE")
     extension="${filename##*.}"
