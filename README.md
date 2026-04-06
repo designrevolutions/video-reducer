@@ -9,7 +9,7 @@ A simple Bash CLI tool to reduce the file size of videos using FFmpeg, while mai
 Run the script on a video:
 
 ```bash
-video-optimise input.mp4
+optimise_video.sh input.mp4
 ```
 
 The optimised file will be saved **in the same folder as the input file**:
@@ -21,7 +21,7 @@ input.mp4 → input_optimised.mp4
 You can also specify an output file:
 
 ```bash
-video-optimise input.mp4 output.mp4
+optimise_video.sh input.mp4 output.mp4
 ```
 
 ---
@@ -55,12 +55,29 @@ Create a personal bin directory (if it does not exist):
 mkdir -p ~/.local/bin
 ```
 
-Copy the script:
+Copy the script into your personal bin:
 
 ```bash
-cp optimise_video.sh ~/.local/bin/video-optimise
-chmod +x ~/.local/bin/video-optimise
+cp optimise_video.sh ~/.local/bin/optimise_video.sh
+chmod +x ~/.local/bin/optimise_video.sh
 ```
+
+---
+
+### Optional: Copy and make executable in one command
+
+You can combine both steps:
+
+```bash
+cp optimise_video.sh ~/.local/bin/optimise_video.sh && \
+chmod +x ~/.local/bin/optimise_video.sh
+```
+
+This uses:
+
+* `cp` → copies the script
+* `chmod +x` → makes it executable
+* `&&` → only runs the second command if the first succeeds
 
 ---
 
@@ -110,19 +127,19 @@ Alternatively, open a new terminal.
 ### 5. Verify installation
 
 ```bash
-which video-optimise
+which optimise_video.sh
 ```
 
 Expected output:
 
 ```
-/home/your-user/.local/bin/video-optimise
+/home/your-user/.local/bin/optimise_video.sh
 ```
 
 You can also test:
 
 ```bash
-video-optimise --help
+optimise_video.sh --help
 ```
 
 ---
@@ -134,7 +151,7 @@ video-optimise --help
 For example:
 
 ```bash
-video-optimise input.mp4
+optimise_video.sh input.mp4
 ```
 
 Linux searches through each directory listed in `PATH` to find the executable.
@@ -209,8 +226,8 @@ Without it, partial matches could cause incorrect behaviour.
 If you prefer a system-wide install:
 
 ```bash
-sudo cp optimise_video.sh /usr/local/bin/video-optimise
-sudo chmod +x /usr/local/bin/video-optimise
+sudo cp optimise_video.sh /usr/local/bin/optimise_video.sh
+sudo chmod +x /usr/local/bin/optimise_video.sh
 ```
 
 No PATH changes required.
