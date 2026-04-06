@@ -1,27 +1,36 @@
 # Video Optimiser (FFmpeg Wrapper)
 
-A simple Bash script to reduce the file size of videos using FFmpeg, while maintaining good visual quality.
+A simple Bash CLI tool to reduce the file size of videos using FFmpeg, while maintaining good visual quality.
 
 ---
 
-## Quick Start (Run the Script)
+## Quick Start
+
+Run the script on a video:
 
 ```bash
-chmod +x optimise_video.sh
-./optimise_video.sh input.mp4
+video-optimise input.mp4
 ```
 
-Or with a custom output file:
+The optimised file will be saved **in the same folder as the input file**:
+
+```
+input.mp4 → input_optimised.mp4
+```
+
+You can also specify an output file:
 
 ```bash
-./optimise_video.sh input.mp4 output.mp4
+video-optimise input.mp4 output.mp4
 ```
 
 ---
 
 ## Installation
 
-### Install FFmpeg
+### 1. Install FFmpeg
+
+This script requires FFmpeg.
 
 #### Ubuntu / Debian
 
@@ -38,12 +47,67 @@ ffmpeg -version
 
 ---
 
+### 2. Install the script (recommended method)
+
+Create a personal bin directory (if it does not exist):
+
+```bash
+mkdir -p ~/.local/bin
+```
+
+Copy the script:
+
+```bash
+cp optimise_video.sh ~/.local/bin/video-optimise
+chmod +x ~/.local/bin/video-optimise
+```
+
+---
+
+### 3. Ensure it is on your PATH
+
+Check:
+
+```bash
+echo $PATH
+```
+
+If you do not see `~/.local/bin`, add this to your `~/.bashrc`:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Then reload:
+
+```bash
+source ~/.bashrc
+```
+
+---
+
+## Alternative Install (symlink)
+
+You can also install system-wide using a symlink:
+
+```bash
+sudo ln -s /full/path/to/optimise_video.sh /usr/local/bin/video-optimise
+```
+
+Then run:
+
+```bash
+video-optimise input.mp4
+```
+
+---
+
 ## What this script does
 
 * Re-encodes video using **H.264 (libx264)**
 * Reduces file size using **CRF-based compression**
 * Re-encodes audio to **AAC**
-* Outputs a smaller, widely compatible file
+* Saves output next to the original file by default
 
 ---
 
@@ -122,43 +186,20 @@ PRESET="slow"
 
 ---
 
-## Output Naming
-
-If no output filename is provided:
-
-```
-input.mp4 → input_optimised.mp4
-```
-
----
-
 ## Notes
 
 * This uses lossy compression
-  Re-encoding multiple times will reduce quality
+* Re-encoding multiple times reduces quality
 
-* Best practice:
+Best practice:
 
-  * Keep original files if important
-  * Compress once only
-
----
-
-## Possible Improvements
-
-* Add batch processing for folders
-* Add quality presets (`--high`, `--low`)
-* Add support for H.265 (better compression, slower)
-* Add resolution scaling (e.g. 1080p → 720p)
+* Keep original files if important
+* Compress once only
 
 ---
 
 ## Summary
 
-This script is designed for:
+This tool is designed for one job:
 
-* Quickly reducing video file sizes
-* Simple one-command usage
-* Good balance between quality and compression
-
-Ideal for backups, sharing, or storage optimisation.
+Quickly reduce video file size with a single command, while keeping a good balance between quality and compression.

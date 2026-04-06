@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-# Exit on error, undefined vars, and pipeline failures
+# Enable strict mode:
+# - exit on error
+# - fail on undefined variables
+# - catch pipeline errors
 set -euo pipefail
 
 ############################################
-# CONFIG (you can tweak these)
+# CONFIGURATION
 ############################################
 
-CRF=23              # Lower = better quality, bigger file
-PRESET="medium"     # ultrafast → veryslow
+CRF=23
+PRESET="medium"
 AUDIO_BITRATE="128k"
 
 ############################################
@@ -23,7 +26,6 @@ fi
 
 INPUT_FILE="$1"
 
-# Check input exists
 if [ ! -f "$INPUT_FILE" ]
 then
     echo "Error: input file does not exist: $INPUT_FILE"
@@ -38,12 +40,13 @@ if [ "$#" -eq 2 ]
 then
     OUTPUT_FILE="$2"
 else
-    # Auto-generate output name
+    # Save the optimised file in the same folder as the input file.
+    input_directory=$(dirname -- "$INPUT_FILE")
     filename=$(basename -- "$INPUT_FILE")
     extension="${filename##*.}"
     name="${filename%.*}"
 
-    OUTPUT_FILE="${name}_optimised.${extension}"
+    OUTPUT_FILE="${input_directory}/${name}_optimised.${extension}"
 fi
 
 ############################################
