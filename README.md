@@ -64,41 +64,115 @@ chmod +x ~/.local/bin/video-optimise
 
 ---
 
-### 3. Ensure it is on your PATH
+### 3. Add to PATH (important)
 
-Check:
+Your system needs to know where to find the script.
+
+Check your PATH:
 
 ```bash
 echo $PATH
 ```
 
-If you do not see `~/.local/bin`, add this to your `~/.bashrc`:
+If you do not see:
 
-```bash
-export PATH="$HOME/.local/bin:$PATH"
+```
+/home/your-user/.local/bin
 ```
 
-Then reload:
+then add it:
 
 ```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
 ---
 
-## Alternative Install (symlink)
+## Understanding PATH (important)
 
-You can also install system-wide using a symlink:
+`PATH` is a list of directories your system searches when you run a command.
 
-```bash
-sudo ln -s /full/path/to/optimise_video.sh /usr/local/bin/video-optimise
-```
-
-Then run:
+Example:
 
 ```bash
 video-optimise input.mp4
 ```
+
+Linux looks through each directory in `PATH` to find `video-optimise`.
+
+---
+
+### Why we add `~/.local/bin`
+
+This allows you to:
+
+* run your script from anywhere
+* avoid using full file paths
+* keep personal tools separate from system tools
+
+---
+
+## Avoiding duplicate PATH entries
+
+If you run this command multiple times:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+you may accidentally add duplicate lines to `.bashrc`.
+
+This can result in PATH looking like:
+
+```
+/home/user/.local/bin:/home/user/.local/bin:/home/user/.local/bin:...
+```
+
+---
+
+### Check for duplicates
+
+```bash
+grep local/bin ~/.bashrc
+```
+
+---
+
+### Safe way to add PATH (recommended)
+
+```bash
+grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' ~/.bashrc || \
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+---
+
+### Even better (runtime-safe approach)
+
+Add this instead:
+
+```bash
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]
+then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+```
+
+This ensures the path is only added once.
+
+---
+
+## Alternative Install (system-wide)
+
+You can install globally using:
+
+```bash
+sudo cp optimise_video.sh /usr/local/bin/video-optimise
+sudo chmod +x /usr/local/bin/video-optimise
+```
+
+No PATH changes needed.
 
 ---
 
