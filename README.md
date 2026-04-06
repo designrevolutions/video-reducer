@@ -66,50 +66,90 @@ chmod +x ~/.local/bin/video-optimise
 
 ### 3. Add to PATH (important)
 
-Your system needs to know where to find the script.
+Your system needs to know where to find your script.
 
-Check your PATH:
+Check your current PATH:
 
 ```bash
 echo $PATH
 ```
 
-If you do not see:
+If you do not see something like:
 
 ```
 /home/your-user/.local/bin
 ```
 
-then add it:
+then you need to add it.
+
+---
+
+#### Safe way to add it (recommended)
 
 ```bash
+grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' ~/.bashrc || \
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+This ensures the line is only added once.
+
+---
+
+### 4. Apply the change (important)
+
+After modifying `.bashrc`, you must reload it:
+
+```bash
 source ~/.bashrc
+```
+
+Alternatively, open a new terminal.
+
+---
+
+### 5. Verify installation
+
+```bash
+which video-optimise
+```
+
+Expected output:
+
+```
+/home/your-user/.local/bin/video-optimise
+```
+
+You can also test:
+
+```bash
+video-optimise --help
 ```
 
 ---
 
 ## Understanding PATH (important)
 
-`PATH` is a list of directories your system searches when you run a command.
+`PATH` is an environment variable that tells Linux where to look when you run a command.
 
-Example:
+For example:
 
 ```bash
 video-optimise input.mp4
 ```
 
-Linux looks through each directory in `PATH` to find `video-optimise`.
+Linux searches through each directory listed in `PATH` to find the executable.
 
 ---
 
-### Why we add `~/.local/bin`
+### Why we use `~/.local/bin`
 
-This allows you to:
+This is the standard location for user-installed scripts.
 
-* run your script from anywhere
-* avoid using full file paths
-* keep personal tools separate from system tools
+Benefits:
+
+* No need for `sudo`
+* Keeps personal tools separate from system tools
+* Allows you to run commands from anywhere
 
 ---
 
@@ -121,13 +161,15 @@ If you run this command multiple times:
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
-you may accidentally add duplicate lines to `.bashrc`.
+you may end up with duplicate entries in your PATH.
 
-This can result in PATH looking like:
+Example:
 
 ```
 /home/user/.local/bin:/home/user/.local/bin:/home/user/.local/bin:...
 ```
+
+This is not ideal and can cause confusion later.
 
 ---
 
@@ -139,18 +181,9 @@ grep local/bin ~/.bashrc
 
 ---
 
-### Safe way to add PATH (recommended)
+### Better approach (runtime-safe)
 
-```bash
-grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' ~/.bashrc || \
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-```
-
----
-
-### Even better (runtime-safe approach)
-
-Add this instead:
+Instead of blindly adding the line, you can use:
 
 ```bash
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]
@@ -159,20 +192,28 @@ then
 fi
 ```
 
-This ensures the path is only added once.
+This checks if the path already exists before adding it.
+
+---
+
+### Why the `":$PATH:"` trick works
+
+Wrapping PATH with colons ensures exact matching.
+
+Without it, partial matches could cause incorrect behaviour.
 
 ---
 
 ## Alternative Install (system-wide)
 
-You can install globally using:
+If you prefer a system-wide install:
 
 ```bash
 sudo cp optimise_video.sh /usr/local/bin/video-optimise
 sudo chmod +x /usr/local/bin/video-optimise
 ```
 
-No PATH changes needed.
+No PATH changes required.
 
 ---
 
@@ -277,3 +318,10 @@ Best practice:
 This tool is designed for one job:
 
 Quickly reduce video file size with a single command, while keeping a good balance between quality and compression.
+
+It is also a useful exercise in understanding:
+
+* how Linux finds commands
+* how environment variables like PATH work
+* how to safely modify shell configuration
+* how to build small but practical CLI tools
